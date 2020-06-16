@@ -30,5 +30,5 @@ func main() {
 		iris.WithoutServerError(iris.ErrServerClosed),
 		iris.WithOptimizations,
 	)
-
 }
+
