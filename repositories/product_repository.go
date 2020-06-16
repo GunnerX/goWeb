@@ -12,16 +12,16 @@ import (
 
 type IProduct interface {
 	// 连接数据库
-	Conn() (error)
+	Conn() error
 	Insert(*datamodels.Product) (int64, error)
 	Delete(int64) bool
 	Update(*datamodels.Product) error
-	SelectByKey(int64)(*datamodels.Product, error)
-	SelectAll()([]*datamodels.Product, error)
+	SelectByKey(int64) (*datamodels.Product, error)
+	SelectAll() ([]*datamodels.Product, error)
 }
 
 type ProductManager struct {
-	table string
+	table     string
 	mysqlConn *sql.DB
 }
 
@@ -76,7 +76,7 @@ func (p *ProductManager) Delete(productID int64) bool {
 	if err != nil {
 		return false
 	}
-	_, err  = stmt.Exec(productID)
+	_, err = stmt.Exec(productID)
 	if err != nil {
 		return false
 	}
@@ -105,7 +105,7 @@ func (p *ProductManager) Update(product *datamodels.Product) error {
 }
 
 // 根据商品ID查询商品
-func (p *ProductManager) SelectByKey(productID int64)(productResult *datamodels.Product, err error) {
+func (p *ProductManager) SelectByKey(productID int64) (productResult *datamodels.Product, err error) {
 	if err = p.Conn(); err != nil {
 		return &datamodels.Product{}, err
 	}
@@ -123,8 +123,9 @@ func (p *ProductManager) SelectByKey(productID int64)(productResult *datamodels.
 	return
 
 }
+
 // 获取所有商品
-func (p *ProductManager) SelectAll()(productArray []*datamodels.Product, errProduct error){
+func (p *ProductManager) SelectAll() (productArray []*datamodels.Product, errProduct error) {
 	if err := p.Conn(); err != nil {
 		return nil, err
 	}
@@ -146,10 +147,3 @@ func (p *ProductManager) SelectAll()(productArray []*datamodels.Product, errProd
 	}
 	return
 }
-
-
-
-
-
-
-
