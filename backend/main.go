@@ -1,7 +1,14 @@
 package main
 
 import (
+	"context"
 	"github.com/kataras/iris"
+	"github.com/kataras/iris/mvc"
+	"imooc-product/backend/web/controllers"
+	"imooc-product/common"
+	"imooc-product/repositories"
+	"imooc-product/services"
+	"log"
 )
 
 func main() {
@@ -21,8 +28,21 @@ func main() {
 		ctx.ViewLayout("")
 		ctx.View("shared/error.html")
 	})
+	db, err := common.NewMysqlConn()
+	if err != nil {
+		log.Fatal(err)
+	}
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
 
 	// 5.注册控制器
+	productRepository := repositories.NewProductManager("product", db)
+	productService := services.NewProductService(productRepository)
+	productParty := app.Party("/product")
+	product := mvc.New(productParty)
+	product.Register(ctx, productService)
+	product.Handle(new(controllers.ProductController))
+
 
 	// 6.启动服务
 	app.Run(
