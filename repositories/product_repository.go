@@ -46,9 +46,9 @@ func (p *ProductManager) Conn() (err error) {
 
 // 插入
 func (p *ProductManager) Insert(product *datamodels.Product) (productId int64, err error) {
-	// 1.判断连接是否存在
+	//1.判断连接是否存在
 	if err := p.Conn(); err != nil {
-		return
+		return 0, err
 	}
 	// 2.准备sql
 	sql := "INSERT product SET productName = ?, productNum = ?, productImage = ?, productUrl = ?"
